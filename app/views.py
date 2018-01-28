@@ -7,7 +7,9 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_protect
 from app.models import Student_Detail, Student_Allotment, Teacher, Teacher_Allotment, Room
-
+import http.client, urllib.request, urllib.parse, urllib.error, base64, requests, json
+subscription_key = '5979034bfb134316b72d9625b0c320c5'
+uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
 
 def index(request):
     return render(request, 'index.html')
@@ -143,3 +145,89 @@ def upload_csv_teacherallot(request):
         Teacher_Allotment.objects.create(
             teacher=s[0], room_name=fields[1], date=fields[2], time=fields[3])
     return HttpResponseRedirect(reverse('upload_csv_teacherallot'))
+
+@csrf_protect
+def hallticket(request):
+    errors = []
+    if request.method == "POST" :
+        q = request.POST['q']
+        print(q)
+        student_details= Student_Detail.objects.filter(sap_id=q)
+        print(student_details)
+        ticket = Student_Allotment.objects.filter(student=student_details[0])
+        return render(request, 'hallticket.html',
+                          {'ticket': ticket, 'query': q})
+
+        
+    return render(request, 'hallticket.html',
+              {'errors': errors})
+
+def detect():
+
+    headers = {
+    'Content-Type': 'application/octet-stream',
+    'Ocp-Apim-Subscription-Key': subscription_key,
+    }
+
+  
+    params = {
+    'returnFaceId': 'true',
+    'returnFaceLandmarks': 'false',
+    'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
+    }
+
+    #body1 = {'url': 'https://vignette.wikia.nocookie.net/harrypotter/images/c/c1/Harry%2Bpotter-Harry_Potter_HP4_01.jpg'}
+    #body2 = {'url': 'https://images.pottermore.com/bxd3o8b291gf/3SQ3X2km8wkQIsQWa02yOY/25f258f21bdbe5f552a4419bb775f4f0/HarryPotter_WB_F4_HarryPotterMidshot_Promo_080615_Port.jpg'}
+   
+    try:
+        data1 = open('./img1.png', 'rb').read()
+        data2 = open('./img2.png', 'rb').read()
+
+        response1 = requests.request('POST', uri_base + '/face/v1.0/detect',  data=data1, headers=headers, params=params)
+        response2 = requests.request('POST', uri_base + '/face/v1.0/detect', data=data2, headers=headers, params=params)
+        print(response1)
+
+        #print ('Response:')
+        parsed1 = json.loads(response1.text)
+        parsed2 = json.loads(response2.text)
+        faceId1=parsed1[0]['faceId']
+        faceId2=parsed2[0]['faceId']
+        print(faceId1,faceId2)
+
+        verify(faceId1,faceId2)
+        #print (json.dumps(parsed, sort_keys=True, indent=2))
+
+    except Exception as e:
+        print('Error:')
+        print(e)
+
+
+def verify(faceId1,faceId2):
+
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': subscription_key,
+    }
+
+
+    params = urllib.parse.urlencode({
+    })
+
+    body = { 
+        "faceId1": faceId1,
+        "faceId2": faceId2,
+    }
+
+    try:
+    
+        response = requests.request('POST', uri_base + '/face/v1.0/verify', json=body, data=None, headers=headers, params=params)
+        print(response)
+        print ('Response:')
+        parsed = json.loads(response.text)
+        print(parsed)
+        print (json.dumps(parsed, sort_keys=True, indent=2))
+    except Exception as e:
+        print('Error:')
+        print(e)
+

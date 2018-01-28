@@ -1,0 +1,18 @@
+
+     <form action="/hallticket/" method="post">
+     {% csrf_token %}
+        <input type="text" name="q">
+        <input type="submit" value="Search">
+
+    </form>
+
+
+    <h1> Hallticket </h1>
+    {% for detail in ticket %}
+    <ul>
+    <li id="ss">{{detail.room_name}}</li>
+    <li id="ss">{{detail.date}}</li>
+    <li id="ss">{{detail.time}}</li>
+    <li id="ss">{{detail.exam}}</li>
+    </ul>
+    {% endfor %}

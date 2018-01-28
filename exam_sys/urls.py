@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^upload_csv_studentallot/$', views.upload_csv_studentallot, name='upload_csv_studentallot'),
     url(r'^upload_csv_teacherallot/$', views.upload_csv_teacherallot, name='upload_csv_teacherallot'),
     url(r'^student_upload/$', views.student_upload, name='student_upload')
+    url(r'^hallticket/$', views.hallticket, name='hallticket')
 ]

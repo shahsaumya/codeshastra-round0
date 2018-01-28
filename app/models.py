@@ -60,7 +60,7 @@ class Student_Allotment(models.Model):
     student = models.ForeignKey(Student_Detail, on_delete=models.CASCADE)
 
     room_name = models.CharField(max_length=40)
-    date = models.CharField(max_length=40)
+    date = models.CharField(max_length=300)
     time = models.CharField(max_length=40)
     exam = models.CharField(max_length=300)
 
@@ -95,3 +95,8 @@ class Room(models.Model):
 
     def to_dict(self):
         return convert_to_dict(self)
+
+
+
+
+
