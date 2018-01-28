@@ -13,7 +13,7 @@ def convert_to_dict(obj):
 class Student_Detail(models.Model):
     name = models.CharField(max_length=20, blank=True)
     sap_id = models.BigIntegerField(validators=[MaxValueValidator(
-        99999999999), MinValueValidator(10000000000)],primary_key=True)
+        99999999999), MinValueValidator(10000000000)], primary_key=True)
 
     address = models.CharField(max_length=50, blank=True)
     dob = models.CharField(max_length=10, validators=[
@@ -39,8 +39,7 @@ class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
 
     sap_id = models.BigIntegerField(validators=[MaxValueValidator(
-        99999999999), MinValueValidator(10000000000)],primary_key=True)
-
+        99999999999), MinValueValidator(10000000000)], primary_key=True)
 
     mobile_no = models.BigIntegerField(validators=[MaxValueValidator(
         9999999999), MinValueValidator(1000000000)])
@@ -57,28 +56,26 @@ class Teacher(models.Model):
         return convert_to_dict(self)
 
 
-
 class Student_Allotment(models.Model):
-    student = models.ForeignKey(Student_Detail)
-    
-    room_name=models.CharField(max_length=40)
-    date=models.CharField(max_length=40)
-    time=models.CharField(max_length=40)
-    exam=models.CharField(max_length=300)
+    student = models.ForeignKey(Student_Detail, on_delete=models.CASCADE)
+
+    room_name = models.CharField(max_length=40)
+    date = models.CharField(max_length=40)
+    time = models.CharField(max_length=40)
+    exam = models.CharField(max_length=300)
 
     def __str__(self):
         return self.sap_id
 
     def to_dict(self):
         return convert_to_dict(self)
-
 
 
 class Teacher_Allotment(models.Model):
-    teacher = models.ForeignKey(Teacher)
-    room_name=models.CharField(max_length=40)
-    date=models.CharField(max_length=40)
-    time=models.CharField(max_length=40)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    room_name = models.CharField(max_length=40)
+    date = models.CharField(max_length=40)
+    time = models.CharField(max_length=40)
 
     def __str__(self):
         return self.sap_id
@@ -87,25 +84,14 @@ class Teacher_Allotment(models.Model):
         return convert_to_dict(self)
 
 
-
 class Room(models.Model):
-    room_no=models.AutoField(primary_key=True)
-    room_name=models.CharField(max_length=40)
-    capacity=models.IntegerField()
-    floor=models.CharField(max_length=10)
+    room_no = models.AutoField(primary_key=True)
+    room_name = models.CharField(max_length=40)
+    capacity = models.IntegerField()
+    floor = models.CharField(max_length=10)
 
     def __str__(self):
         return self.room_name
 
     def to_dict(self):
         return convert_to_dict(self)
-
-
-
-
-
-
-
-
-
-

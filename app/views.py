@@ -88,10 +88,10 @@ def student_upload(request):
     return render(request, 'student_upload.html', {'form': form})
 
 
-def upload_csv(request):
+def upload_csv_room(request):
     data = {}
     if request.method == "GET":
-        return render(request, "upload_csv.html", data)
+        return render(request, "room-upload.html", data)
     # if not GET, then proceed
     csv_file = request.FILES["csv_file"]
     file_data = csv_file.read().decode("utf-8")
@@ -100,6 +100,6 @@ def upload_csv(request):
     # loop over the lines and save them in db. If error , store as string and then display
     for line in lines[:-1]:
         fields = line.split(",")
-        Student_Detail.objects.create(name=fields[0], sap_id=fields[1],
-                                      address=fields[2], mobile_no=fields[3], dept=fields[4])
+        Room.objects.create(room_name=fields[0], capacity=fields[1],
+                            floor=fields[2])
     return HttpResponseRedirect(reverse('upload_csv'))
