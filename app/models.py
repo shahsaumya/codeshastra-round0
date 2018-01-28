@@ -65,7 +65,7 @@ class Student_Allotment(models.Model):
     exam = models.CharField(max_length=300)
 
     def __str__(self):
-        return self.sap_id
+        return self.student.name
 
     def to_dict(self):
         return convert_to_dict(self)
@@ -78,7 +78,7 @@ class Teacher_Allotment(models.Model):
     time = models.CharField(max_length=40)
 
     def __str__(self):
-        return self.sap_id
+        return self.teacher.user.username
 
     def to_dict(self):
         return convert_to_dict(self)

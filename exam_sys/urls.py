@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^upload_csv/$', views.upload_csv_room, name='upload_csv_room'),
+    url(r'^upload_csv_room/$', views.upload_csv_room, name='upload_csv_room'),
+    url(r'^upload_csv_studentallot/$', views.upload_csv_studentallot, name='upload_csv_studentallot'),
+    url(r'^upload_csv_teacherallot/$', views.upload_csv_teacherallot, name='upload_csv_teacherallot'),
     url(r'^student_upload/$', views.student_upload, name='student_upload')
 ]
