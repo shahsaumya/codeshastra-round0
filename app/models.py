@@ -23,7 +23,7 @@ class Student_Detail(models.Model):
         9999999999), MinValueValidator(1000000000)])
 
     dept = models.CharField(max_length=20, blank=True)
-    pic = models.FileField(blank=True)
+    pic = models.ImageField(blank=True, upload_to = 'pic_folder/')
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

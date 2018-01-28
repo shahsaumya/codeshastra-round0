@@ -8,6 +8,7 @@ from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_protect
 from app.models import Student_Detail, Student_Allotment, Teacher, Teacher_Allotment, Room
 import http.client, urllib.request, urllib.parse, urllib.error, base64, requests, json
+from PIL import Image
 subscription_key = '5979034bfb134316b72d9625b0c320c5'
 uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
 
@@ -162,7 +163,37 @@ def hallticket(request):
     return render(request, 'hallticket.html',
               {'errors': errors})
 
-def detect():
+def verify(request):
+    if request.method=="POST":
+        sap_sent=requests.POST['sap_id']
+        img_sent=request.body
+        student_details= Student_Detail.objects.filter(sap_id=sap_sent)
+        print(student_details)
+        img_store=student_details.pic
+
+        detect(img_store,img_sent)
+
+
+
+def test(request):
+    student_details= Student_Detail.objects.filter(sap_id=60004150064)
+    #print(student_details)
+    
+    #print(student_details[0].pic)
+    img_sent=student_details[0].pic
+    print(img_sent)
+    (img_sent)
+    detect(img_sent, img_sent)
+
+    return render(request, 'test.html',
+              {})
+
+
+
+
+
+
+def detect(img_sent, img_store):
 
     headers = {
     'Content-Type': 'application/octet-stream',
@@ -180,11 +211,18 @@ def detect():
     #body2 = {'url': 'https://images.pottermore.com/bxd3o8b291gf/3SQ3X2km8wkQIsQWa02yOY/25f258f21bdbe5f552a4419bb775f4f0/HarryPotter_WB_F4_HarryPotterMidshot_Promo_080615_Port.jpg'}
    
     try:
-        data1 = open('./img1.png', 'rb').read()
-        data2 = open('./img2.png', 'rb').read()
+        #data1 = open('./img1.png', 'rb').read()
+        #data2 = open('./img2.png', 'rb').read()
 
-        response1 = requests.request('POST', uri_base + '/face/v1.0/detect',  data=data1, headers=headers, params=params)
-        response2 = requests.request('POST', uri_base + '/face/v1.0/detect', data=data2, headers=headers, params=params)
+        #data1= Image.open(img_sent)
+        #print(data1)
+        #data2= Image.open(img_store)
+        data1 = open(str(img_sent), 'rb').read()
+        data2 = open(str(img_store), 'rb').read()
+
+
+        response1 = requests.request('POST', uri_base + '/face/v1.0/detect',  data=img_sent, headers=headers, params=params)
+        response2 = requests.request('POST', uri_base + '/face/v1.0/detect', data=img_store, headers=headers, params=params)
         print(response1)
 
         #print ('Response:')
@@ -194,7 +232,7 @@ def detect():
         faceId2=parsed2[0]['faceId']
         print(faceId1,faceId2)
 
-        verify(faceId1,faceId2)
+        verify2(faceId1,faceId2)
         #print (json.dumps(parsed, sort_keys=True, indent=2))
 
     except Exception as e:
@@ -202,7 +240,7 @@ def detect():
         print(e)
 
 
-def verify(faceId1,faceId2):
+def verify2(faceId1,faceId2):
 
 
     headers = {
